@@ -93,7 +93,7 @@ class _FormNumbersState extends State<FormNumbers> {
    Widget _showNumberRandomized(){
     if(_maximumController.text.isEmpty || _minimumController.text.isEmpty){
       return const AlertDialog(
-        title: Text("Numbers will be entered"),
+        title: Text("Numbers must be entered"),
       );
     }else {
       return
