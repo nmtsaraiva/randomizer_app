@@ -44,6 +44,23 @@ class _FormNumbersState extends State<FormNumbers> {
 
   var randomNumber = "";
 
+  _showDialog(String message) {
+    showDialog(context: context, builder: (ctx) =>  AlertDialog(
+      title: const Text("Error", style: TextStyle(fontSize: 21),),
+      content: Text(message, style: const TextStyle(fontSize: 21),),
+      actions: [
+        TextButton(
+            onPressed: (){
+              Navigator.of(ctx).pop();
+            },
+            child: Container(
+              padding: const EdgeInsets.all(17),
+              child: const Text("OK", style: TextStyle(fontSize: 21),),
+            ))
+      ],
+    ));
+  }
+
   Future<void> _showRandomized() async {
     setState(()  {
        randomNumber =  (int.parse(_minimumController.text) +  Random().nextInt((int.parse(_maximumController.text)) -
@@ -57,30 +74,51 @@ class _FormNumbersState extends State<FormNumbers> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const Gap(60),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          child: TextFormField(
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  color: Colors.lightBlueAccent
+                ),
+                height: 100,
+                width: 180,
+                padding: const EdgeInsets.fromLTRB(21, 21, 21, 21),
+                child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                    decoration: const InputDecoration(
+                      labelText: "Minimum", labelStyle: TextStyle(fontSize: 21, color: Colors.white),
+                    ),
+                    controller: _minimumController
+                ),
+              ),
+              Container(
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.redAccent
+                ),
+                height: 100,
+                width: 180,
+                padding: const EdgeInsets.fromLTRB(21, 21, 21, 21),
+                child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                    decoration: const InputDecoration(
+                      labelText: "Maximum", labelStyle: TextStyle(fontSize: 21, color: Colors.white),
+                    ),
+                    controller: _maximumController
+                ),
+              ),
             ],
-            decoration: const InputDecoration(
-              labelText: "Minimum", labelStyle: TextStyle(fontSize: 21),
-            ),
-            controller: _minimumController
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          child: TextFormField(
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly
-            ],
-            decoration: const InputDecoration(
-              labelText: "Maximum", labelStyle: TextStyle(fontSize: 21),
-            ),
-            controller: _maximumController
           ),
         ),
         const Gap(20),
@@ -89,53 +127,14 @@ class _FormNumbersState extends State<FormNumbers> {
           child: Center(
             child: FloatingActionButton.extended(
               label: const Text("Generate"),
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.lightGreen,
               onPressed: () async {
                 if(_minimumController.text.isEmpty || _maximumController.text.isEmpty ) {
-                  showDialog(context: context, builder: (ctx) =>  AlertDialog(
-                    title: const Text("Error", style: TextStyle(fontSize: 21),),
-                    content: const Text("Enter a minimum and maximum number", style: TextStyle(fontSize: 21),),
-                    actions: [
-                      TextButton(
-                          onPressed: (){
-                            Navigator.of(ctx).pop();
-                            },
-                          child: Container(
-                            padding: const EdgeInsets.all(17),
-                            child: const Text("OK", style: TextStyle(fontSize: 21),),
-                          ))
-                    ],
-                  ));
+                  _showDialog("Enter a minimum and maximum number");
                 } else if (int.parse(_minimumController.text) > int.parse(_maximumController.text)){
-                  showDialog(context: context, builder: (ctx) =>  AlertDialog(
-                    title: const Text("Error", style: TextStyle(fontSize: 21),),
-                    content: const Text("The minimum number cannot be greater than the maximum", style: TextStyle(fontSize: 21),),
-                    actions: [
-                      TextButton(
-                          onPressed: (){
-                            Navigator.of(ctx).pop();
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(17),
-                            child: const Text("OK", style: TextStyle(fontSize: 21),),
-                          ))
-                    ],
-                  ));
+                  _showDialog("The minimum number cannot be greater than the maximum");
                 } else if(int.parse(_minimumController.text) == int.parse(_maximumController.text)){
-                  showDialog(context: context, builder: (ctx) =>  AlertDialog(
-                    title: const Text("Error", style: TextStyle(fontSize: 21),),
-                    content: const Text("The minimum number cannot be equal than the maximum", style: TextStyle(fontSize: 21),),
-                    actions: [
-                      TextButton(
-                          onPressed: (){
-                            Navigator.of(ctx).pop();
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(17),
-                            child: const Text("OK", style: TextStyle(fontSize: 21),),
-                          ))
-                    ],
-                  ));
+                  _showDialog("The minimum number cannot be equal than the maximum");
                 } else {
                   await _showRandomized();
                 }
@@ -166,6 +165,8 @@ class _FormNumbersState extends State<FormNumbers> {
     );
   }
 }
+
+
 
 
 
